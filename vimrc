@@ -1,7 +1,7 @@
 function! s:insert_copyright()
-  execute "normal! i// Copyright 2018 Cohesity Inc."
+  execute "normal! i// Copyright 2018"
   execute "normal! o//"
-  execute "normal! o// Author: Nitendra Tomar (ntomar@cohesity.com)"
+  execute "normal! o// Author: Nitendra Tomar (nitintomar332@gmail.com)"
   execute "normal! o"
   normal! kk
 endfunc
