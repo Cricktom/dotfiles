@@ -98,12 +98,20 @@ alias l='ls -CF'
 
 # SSH alias
 alias sshrobo='ssh support@10.2.145.37'
-alias colo='ssh -t cohesity@10.2.223.24'
+alias cdmain='cd ~/workspace/main'
+alias cdtool='cd ~/workspace/toolchain2'
 alias sshrt='ssh cohesity@rt.cohesity.com'
 
 function trt () {
   ssh -fN -L $1:rt.cohesity.com:$2 cohesity@rt.cohesity.com
 }
+
+# if [ -f $HOME/.local/lib/python3.8/site-packages/powerline/bindings/bash/powerline.sh]; then
+    # $HOME/.local/bin/powerline-daemon -q
+    # POWERLINE_BASH_CONTINUATION=1
+    # POWERLINE_BASH_SELECT=1
+    # source $HOME/.local/lib/python3.8/site-packages/powerline/bindings/bash/powerline.sh
+# fi
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
@@ -173,6 +181,9 @@ BWHITE='\[\e[1;37m\]'
 BGWHITE='\[\e[1;37m\]'
 
 PROMPT_COMMAND=smile_prompt
+parse_git_branch() {
+      git branch 2> /dev/null | sed -n -e 's/^\* \(.*\)/[\1]/p'
+}
 
 function smile_prompt
 {
@@ -190,16 +201,17 @@ function smile_prompt
     UC="${BRED}"
   else
     #normal user color
-    UC="${BRED}"
+    UC="${GREEN}"
   fi
   #hostname color
-  HC="${BRED}"
+  HC="${GREEN}"
   #regular color
   RC="${BBLACK}"
   #default color
   DF='\[\e[0m\]'
   TIME=$(date +%H:%M)
-  PS1="[${HC}\h ${TIME} ${RC}\W${DF}] ${SC}${DF} "
+  COLOR_GIT="${BGYELLOW}"
+  PS1="[${HC}\u@\h: ${TIME} ${RC} ${COLOR_GIT}\W>>$(parse_git_branch)] ${SC}${DF} "
 }
 
 # Quickly run the make command from the top directory
@@ -218,19 +230,6 @@ function gettarget {
   fi
 }
 
-function getcluster {
-  CLUSTER=$*
-
-  if [ -z "$CLUSTER" ]
-  then
-    CLUSTER="10.2.37.110"
-  fi
-
-  if [[ "$CLUSTER" == "cloud" ]]
-  then
-    CLUSTER="10.2.32.183 10.2.32.185 10.2.32.187"
-  fi
-}
 
 function copyid {
   USER="cohesity"
@@ -285,23 +284,10 @@ function sshc() {
   ssh -v $1
 }
 
-function upload() {
-  COMMIT=$1
-  if [ -z "$COMMIT" ]
-  then
-    COMMIT="HEAD"
-  else
-    COMMIT="HEAD~"$1
-  fi
-
-  ./open_tools/codereview/upload.py --no_oauth2_webbrowser --commit $COMMIT -y
-}
-
 export -f maketarget
 export -f publish
 export -f swap
 export -f copyid
 export -f sshc
-export -f upload
 export VISUAL=vim
 export EDITOR=$VISUAL
